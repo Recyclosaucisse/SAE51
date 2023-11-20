@@ -1,42 +1,53 @@
 <?php
+    function sql_command($colonnes, $values)
+    {
+        $servername = "";
+        $username = "";
+        $password = "";
+        $dbname = "";
 
-	function sql_command($command)
-	{
-		$servername = "fdb1031.runhosting.com";
-		$username = "3950337_joomla7df3217c";
-		$password = "SJpTdIGPqhBTjR2jIY5GyxMkkoDct1vB";
-		$dbname = "3950337_joomla7df3217c";
+        $conn = new mysqli($servername, $username, $password, $dbname);
+        if ($conn->connect_error) {
+            http_response_code(500);
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-		// Création de la connexion
-		$conn = new mysqli($servername, $username, $password, $dbname);
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+        $columns_string = implode(',', $colonnes);
 
-		// Vérification de la connexion
-		if ($conn->connect_error) {
-		    die("Connection failed: ". $conn->connect_error);
-		}
+        $command = "INSERT INTO `MESURE` ($columns_string) VALUES ($placeholders);";
 
-		// Exécution de la requête SQL et récupération des données
-		// $sql = "SELECT * FROM `iorcu_users`";
-		$result = $conn->query($command);
+        $stmt = $conn->prepare($command);
+        if ($stmt === false) {
+            http_response_code(500);
+            die("Erreur lors de la préparation de la requête : " . $conn->error);
+        }
 
-		// Affichage des données
-		if ($result != 1) {
-			echo "Il y a eu une erreur !";
-		} else {
-		    echo "1 ligne modifiée";
-		}
+        $stmt->bind_param("iiss", ...$values);
 
-		// Fermeture de la connexion
-		$conn->close();
-	}
+        if (!$stmt->execute()) {
+            http_response_code(500);
+            echo "Erreur lors de l'exécution de la requête : " . $stmt->error;
+        } else {
+            http_response_code(201);
+            echo $stmt->affected_rows . " ligne(s) modifiée(s)";
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
 
     function verifyToken($token)
     {
-        if ($token === "zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X") {
-        	$command = $_POST['sqli_command'];
-            sql_command($command);
+        // Remplacer par votre token
+        $secret_token = "";
+        if ($token === $secret_token) {
+            $colonnes = explode(',', $_POST['colonnes']);
+            $values = explode(',', $_POST['values']);
+            sql_command($colonnes, $values);
         } else {
-            header("Location: /index.php");
+            http_response_code(403);
+            echo "Accès interdit";
             exit;
         }
     }
@@ -45,7 +56,8 @@
         $token = $_POST['token'];
         verifyToken($token);
     } else {
-        header("Location: /index.php");
+        http_response_code(400);
+        echo "Token de connexion manquant";
         exit;
     }
 ?>
