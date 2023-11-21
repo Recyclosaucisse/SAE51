@@ -1,12 +1,11 @@
 import requests
+import random
 
-def send_to_bdd(colonnes, values):
+def send_to_bdd(values):
     url = "http://sae51.rt-blagnac.fr/api/api.php"
 
-    # Assurez-vous que les colonnes et les valeurs sont des chaînes séparées par des virgules
     data = {
-        "token": "zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X",
-        "colonnes": ','.join(colonnes),
+        "token": "",
         "values": ','.join([str(v) for v in values])
     }
 
@@ -14,17 +13,36 @@ def send_to_bdd(colonnes, values):
 
     # Gérer les différents codes de statut HTTP
     if response.status_code == 201:
-        print("Opération réussie : ", response.text)
-    elif response.status_code == 400:
-        print(f"Erreur 400 : Mauvaise requête - {response.text}")
-    elif response.status_code == 403:
-        print(f"Erreur 403 : Accès interdit - {response.text}")
-    elif response.status_code == 500:
-        print(f"Erreur 500 : Erreur interne du serveur - {response.text}")
+        pass
     else:
-        print(f"Erreur inconnue (HTTP {response.status_code}) : {response.text}")
+        print(f"Erreur {response.status_code}: {values}")
 
-colonnes = ["ID_CAPTEUR", "VALEUR", "ACTION", "CRITICITE"]
-values = [4, 444, "ALLUMER-LUMIERE", 2]
 
-send_to_bdd(colonnes, values)
+
+def generate_values():
+    first_value = random.randint(1, 4)
+    
+    second_value = random.randint(1, 775)
+    
+    if second_value < 200:
+        third_value = "ALLUMER-LUMIERE"
+    elif second_value > 500:
+        third_value = "ETEINDRE-LUMIERE"
+    else:
+        third_value = ""
+    
+    if third_value:
+        fourth_value = random.randint(2, 3)
+    else:
+        fourth_value = random.randint(1, 3)
+    
+    values = [first_value, second_value, third_value, fourth_value]
+    return values
+
+
+# colonnes = ["ID_CAPTEUR", "VALEUR", "ACTION", "CRITICITE"]
+# values = [4, 250, "ALLUMER-LUMIERE", 2]
+
+for i in range(75):
+    values = generate_values()
+    send_to_bdd(values)
