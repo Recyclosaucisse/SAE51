@@ -1,0 +1,42 @@
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<style>
+    .point {
+        fill: red;
+        r: 5;
+    }
+
+    .myImage {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
+<svg id="mySVG">
+    <image id="myImage" href="images/plan_mi.png"/>
+</svg>
+
+<script>
+    var svg = d3.select("#mySVG"),
+        img = d3.select("#myImage");
+
+    function update() {
+        var imgBBox = img.node().getBBox();
+
+        svg.attr("width", imgBBox.width).attr("height", imgBBox.height);
+
+        // Remove all existing points
+        svg.selectAll(".point").remove();
+
+        // Create a new point at a random position
+        var point = {x: Math.random() * imgBBox.width, y: Math.random() * imgBBox.height};
+
+        svg.append("circle")
+            .attr("class", "point")
+            .attr("cx", point.x)
+            .attr("cy", point.y)
+            .attr("r", 5);
+    }
+
+    img.node().onload = update;  // Update when the image has loaded
+    setInterval(update, 5000);  // Call update every 5000ms (5 seconds)
+</script>
