@@ -31,6 +31,7 @@ static uint8_t mydata[] = "init";
 static osjob_t sendjob;
 const unsigned TX_INTERVAL = 10;
 int presence;
+int8_t getBatteryLevel();
 
 //WiFi
 const char *ssid = "ElBigotes"; // SSID of the AP at the MI
@@ -61,7 +62,7 @@ void printHex2(unsigned v)
 }
 
 void onEvent (ev_t ev)
-{
+{/*
     Serial.print(os_getTime());
     M5.Lcd.print(os_getTime());
     Serial.print(": ");
@@ -190,7 +191,7 @@ void onEvent (ev_t ev)
             M5.Lcd.print("EV_TXCANCELED ");
             break;
         case EV_RXSTART:
-            /* do not print anything -- it wrecks timing */
+            //do not print anything -- it wrecks timing 
             break;
         case EV_JOIN_TXCOMPLETE:
             Serial.println(F("EV_JOIN_TXCOMPLETE: no JoinAccept"));
@@ -203,13 +204,12 @@ void onEvent (ev_t ev)
             M5.Lcd.print((unsigned) ev);
             M5.Lcd.print(" ");
             break;
-    }
+    }*/
 }
 
 void do_send(osjob_t* j)
 {
   static uint32_t sqn = 0;
-
   // Check if there is not a current TX/RX job running
    if (LMIC.opmode & OP_TXRXPEND) 
   {
@@ -217,24 +217,27 @@ void do_send(osjob_t* j)
       M5.Lcd.print("OP_TXRXPEND, not sending ");
   } 
   else 
-  {         // Prepare upstream data transmission at the next possible time.
-    if (digitalRead(16)==1) //if mouvement detected
-    {
-      presence=1;
-      sprintf((char*)mydata,"{\"Presence\":%D}", presence); //JSON format 
-    }
-    else
-    {
-      presence=0;
-      sprintf((char*)mydata,"{\"Presence\":%d}", presence); //JSON format a voir le presence()
-    }
-    LMIC_setTxData2(1, mydata, strlen((char*)mydata), 0);
-    sqn++;
-
+  {
     M5.Lcd.fillRect(0, 0, 1000, 1000, BLACK); // Draws a black square 1000 pixel long.
     M5.Lcd.setCursor(0,0); //Set the cursor TOP LEFT
     String formattedDate = timeClient.getFormattedTime(); //extract date and time from the NTP server
     M5.Lcd.println(formattedDate);
+    
+    if (digitalRead(16)==1) //if mouvement detected
+    {
+      M5.Lcd.println("Presence Detected");
+      presence=1;
+      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); //JSON format
+    }
+    else
+    {
+      M5.Lcd.println("No presence Detected");
+      presence=0;
+      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); //JSON format
+    }
+
+    LMIC_setTxData2(1, mydata, strlen((char*)mydata), 0);
+    sqn++;
     M5.Lcd.printf("Le message numero : %d a ete envoye \n", sqn);
   }
 }  // Next TX is scheduled after TX_COMPLETE event.
@@ -284,7 +287,6 @@ void setup()
   os_init(); // LMIC init
   LMIC_reset(); // Reset the MAC state. Session and pending data transfers will be discarded.
   do_send(&sendjob); // Start job (sending automatically starts OTAA too)
-
 }
 
 void loop() 
