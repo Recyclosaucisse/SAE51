@@ -2,42 +2,36 @@
 
 #include <M5Stack.h>
 #include <M5LoRa.h>
-#include <lmic.h> //Library allowing an object to connect to a LoRaWAN network.
-#include <hal/hal.h> //Allows to run LMIC on top of the Arduino environment
-#include <SPI.h> //Allows to manage the exchange of information between the Arduino board and the sensors
+#include <lmic.h> // Library allowing an object to connect to a LoRaWAN network.
+#include <hal/hal.h> // Allows to run LMIC on top of the Arduino environment
+#include <SPI.h> // Allows to manage the exchange of information between the Arduino board and the sensors
 
 #include <WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
                                                                                                                           
-//   Name:M5Stack00-3 (RT)  :  0C 7E 45 01 02 03 03 44
+// APPEUI ligne 69 : 0C 7E 45 01 02 03 03 44
 static const u1_t PROGMEM APPEUI[8]={ 0x0C, 0x7E, 0x45, 0x01, 0x02, 0x03, 0x03, 0x44  }; // 8 octets  
-                                                                                                                          
 void os_getArtEui (u1_t* buf) { memcpy_P(buf, APPEUI, 8);}
 
-// This should also be in little endian format, see above.
-
+// DEVEUI -> APPEUI in little Indian
 static const u1_t PROGMEM DEVEUI[8]={ 0x44, 0x03, 0x03, 0x02, 0x01, 0x45, 0x7E, 0x0C }; 
-
-
 void os_getDevEui (u1_t* buf) { memcpy_P(buf, DEVEUI, 8);}
 
-//APPKEY DE M5Stack Ligne 69 : 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 03 44
+//APPKEY Ligne 69 : 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 03 44
 static const u1_t PROGMEM APPKEY[16] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x03, 0x44 }; //16 octets
-
 void os_getDevKey (u1_t* buf) {  memcpy_P(buf, APPKEY, 16);}
 
-static uint8_t mydata[] = "init";
+static uint8_t mydata[] = "init"; 
 static osjob_t sendjob;
-const unsigned TX_INTERVAL = 10;
+const unsigned TX_INTERVAL = 90; // Waiting time (in seconds) between 2 LoRaWAN transmissions
 int presence;
-int8_t getBatteryLevel();
 
 //WiFi
 const char *ssid = "ElBigotes"; // SSID of the AP at the MI
 const char *password = "TucubanitoRico"; // PWD of the AP at the MI
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org"); //Connecting to a NTP server
+NTPClient timeClient(ntpUDP, "pool.ntp.org"); // Connecting to a NTP server
 
 // Pin mapping pour M5Stack (Thierry VAL)
 const lmic_pinmap lmic_pins = {
@@ -49,7 +43,7 @@ const lmic_pinmap lmic_pins = {
     // mosi:pin 23, miso:pin 19, nss:pin 5, sck: pin 18, rst: pin 26
 };
 
-void printHex2(unsigned v)
+void printHex2(unsigned v) // Fonction used to format hexadecimal numbers so they are always 16 numbers long
 {
   v &= 0xff;
   if (v < 16)
@@ -207,13 +201,11 @@ void onEvent (ev_t ev)
     }
 }
 
-void do_send(osjob_t* j)
+void do_send(osjob_t* j) // Foction used to send LoRaWAN packets
 {
   static uint32_t sqn = 0;
-  // Check if there is not a current TX/RX job running
-   if (LMIC.opmode & OP_TXRXPEND) 
+   if (LMIC.opmode & OP_TXRXPEND) // Check if there is a current TX/RX job running
   {
-      Serial.println(F("OP_TXRXPEND, not sending"));
       M5.Lcd.print("OP_TXRXPEND, not sending ");
   } 
   else 
@@ -223,21 +215,21 @@ void do_send(osjob_t* j)
     String formattedDate = timeClient.getFormattedTime(); //extract date and time from the NTP server
     M5.Lcd.println(formattedDate);
     
-    if (digitalRead(16)==1) //if mouvement detected
+    if (digitalRead(16)==1) // If presence detected
     {
       M5.Lcd.println("Presence Detected");
       presence=1;
-      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); //JSON format
+      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); // JSON format
     }
-    else
+    else // If no presence detected
     {
       M5.Lcd.println("No presence Detected");
       presence=0;
-      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); //JSON format
+      sprintf((char*)mydata,"{\"Presence\":%d, \"Battery\":%i}", presence, M5.Power.getBatteryLevel()); // JSON format
     }
 
-    LMIC_setTxData2(1, mydata, strlen((char*)mydata), 0);
-    sqn++;
+    LMIC_setTxData2(1, mydata, strlen((char*)mydata), 0); // Send the JSON packet via LoRaWAN
+    sqn++; //Increment the sequence number
     M5.Lcd.printf("Le message numero : %d a ete envoye \n", sqn);
   }
 }  // Next TX is scheduled after TX_COMPLETE event.
@@ -248,17 +240,19 @@ void setup()
   M5.Power.begin();
   M5.Lcd.begin();
 
-  M5.Lcd.setTextSize(2);
+  M5.Lcd.setTextSize(2); // Increase the size of the text
   M5.Lcd.println("Test LoRaWAN LMIC ");
 
   while (! Serial);
-    Serial.begin(115200);
+  {
+    Serial.begin(115200); // Initialize the serial connection at 115200 Bauds
+  }
 
   M5.Lcd.print("Starting ");
   WiFi.begin(ssid, password); // Connexion to the WiFi network
 
-  while (WiFi.status() != WL_CONNECTED)
-  { //If not connected to WiFi
+  while (WiFi.status() != WL_CONNECTED) // If not connected to WiFi
+  { 
     delay(1000);
     M5.Lcd.println("Connecting to WiFi...");
   }
@@ -272,8 +266,8 @@ void setup()
   pinMode(16, INPUT); // Set the PINs of the PIR captor
   M5.Lcd.println("Waiting for sync...");
 
-  int minute = timeClient.getMinutes(); //Get the minute
-  while (timeClient.getMinutes() == minute) //Wait Until the minute has passed
+  int minute = timeClient.getMinutes(); // Get the minute
+  while (timeClient.getMinutes() == minute) // Wait Until the minute has passed
   {
     delay (1000);
   }
@@ -291,5 +285,5 @@ void setup()
 
 void loop() 
 {
-  os_runloop_once();
+  os_runloop_once(); // This loop causes radio events to occur based on events and time
 }
