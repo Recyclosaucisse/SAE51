@@ -62,7 +62,7 @@ void printHex2(unsigned v)
 }
 
 void onEvent (ev_t ev)
-{/*
+{
     Serial.print(os_getTime());
     M5.Lcd.print(os_getTime());
     Serial.print(": ");
@@ -204,7 +204,7 @@ void onEvent (ev_t ev)
             M5.Lcd.print((unsigned) ev);
             M5.Lcd.print(" ");
             break;
-    }*/
+    }
 }
 
 void do_send(osjob_t* j)
