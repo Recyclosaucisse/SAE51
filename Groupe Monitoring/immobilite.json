@@ -1,0 +1,153 @@
+[
+    {
+        "id": "1dfc51f5b8f4c1ae",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2e52804fac248bff",
+        "type": "mqtt in",
+        "z": "1dfc51f5b8f4c1ae",
+        "name": "ecoute sur le topic localisation",
+        "topic": "/SDB/localisation",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "c2bd33c28775b437",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 420,
+        "y": 200,
+        "wires": [
+            [
+                "6cb0ea376b17d1e3"
+            ]
+        ]
+    },
+    {
+        "id": "6cb0ea376b17d1e3",
+        "type": "change",
+        "z": "1dfc51f5b8f4c1ae",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "Immobilité détectée, est-ce que tout va bien ?",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 730,
+        "y": 200,
+        "wires": [
+            [
+                "c83c64a3ce77c6b6"
+            ]
+        ]
+    },
+    {
+        "id": "c83c64a3ce77c6b6",
+        "type": "mqtt out",
+        "z": "1dfc51f5b8f4c1ae",
+        "name": "publication dans la MIB",
+        "topic": "api/1/room/all/voice/say/id/1/request",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "f5912842926cf20e",
+        "x": 1050,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c2bd33c28775b437",
+        "type": "mqtt-broker",
+        "name": "Privée",
+        "broker": "192.168.45.155",
+        "port": "1883",
+        "tls": "d76bd836b3a9f091",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f5912842926cf20e",
+        "type": "mqtt-broker",
+        "name": "Broker MIB",
+        "broker": "192.168.16.150",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d76bd836b3a9f091",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    }
+]
