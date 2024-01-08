@@ -1,0 +1,655 @@
+[
+    {
+        "id": "e10d9c4aa7902102",
+        "type": "tab",
+        "label": "Flux 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2f5d4bce02ade5a6",
+        "type": "inject",
+        "z": "e10d9c4aa7902102",
+        "name": "Capteur 1",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030344\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 1     }   } }",
+        "payloadType": "json",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "b29e860a5b4028e7"
+            ]
+        ]
+    },
+    {
+        "id": "c9f302339d0c7451",
+        "type": "debug",
+        "z": "e10d9c4aa7902102",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.object.mydata",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "d73f9eb625ad1cf4",
+        "type": "inject",
+        "z": "e10d9c4aa7902102",
+        "name": "capteur 2",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030345\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 1     }   } }",
+        "payloadType": "json",
+        "x": 160,
+        "y": 240,
+        "wires": [
+            [
+                "b29e860a5b4028e7"
+            ]
+        ]
+    },
+    {
+        "id": "7ccadc88d091c4ef",
+        "type": "inject",
+        "z": "e10d9c4aa7902102",
+        "name": "capteur 3",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030346\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 0     }   } }",
+        "payloadType": "json",
+        "x": 160,
+        "y": 400,
+        "wires": [
+            [
+                "b29e860a5b4028e7"
+            ]
+        ]
+    },
+    {
+        "id": "b29e860a5b4028e7",
+        "type": "join",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload.object.mydata.presence",
+        "propertyType": "msg",
+        "key": "payload.object.mydata.presence",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 440,
+        "y": 180,
+        "wires": [
+            [
+                "cd0f3a1942b7fbf1"
+            ]
+        ]
+    },
+    {
+        "id": "cd0f3a1942b7fbf1",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 2",
+        "func": "var capteur1 = msg.payload.object.mydata.presence[0];\nvar capteur2 = msg.payload.object.mydata.presence[1];\nvar capteur3 = msg.payload.object.mydata.presence[2];\n\nvar resultat = {\n    capteur1: capteur1,\n    capteur2: capteur2,\n    capteur3: capteur3,\n};\n\n// Remplacer msg.payload par le nouvel objet\nmsg.payload = resultat;\n\n// Afficher le nouvel objet dans le débogueur\nnode.send(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 180,
+        "wires": [
+            [
+                "d017ee36ab3cf86d"
+            ]
+        ]
+    },
+    {
+        "id": "d017ee36ab3cf86d",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 3",
+        "func": "var capteur1 = msg.payload.capteur1;\nvar capteur2 = msg.payload.capteur2;\nvar capteur3 = msg.payload.capteur3;\n\nvar localisation = {\n    zone: 0,   // Valeur par défaut si aucune condition n'est remplie\n    mouvement: false  // Valeur par défaut si aucune condition n'est remplie\n};\n\nif (capteur1 == 1 && capteur2 == 1 && capteur3 == 1) {\n    localisation.zone = 7;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 0 && capteur3 == 0) {\n    localisation.zone = 1;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 1 && capteur3 == 0) {\n    localisation.zone = 2;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 0 && capteur3 == 1) {\n    localisation.zone = 3;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 1 && capteur3 == 0) {\n    localisation.zone = 4;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 0 && capteur3 == 1) {\n    localisation.zone = 5;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 1 && capteur3 == 1) {\n    localisation.zone = 6;\n    localisation.mouvement = true;\n}\n\n// Envoyer le résultat au prochain nœud\nmsg.payload = localisation;\nnode.send(msg);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 180,
+        "wires": [
+            [
+                "eceab4e25b924cfd"
+            ]
+        ]
+    },
+    {
+        "id": "eceab4e25b924cfd",
+        "type": "mqtt out",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "topic": "SAE51/localisation",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2fcd7b1431a62f13",
+        "x": 1050,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "53eafd0c8d743f08",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 4",
+        "func": "const axios = global.get('axios');\n\nfunction send_to_database(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Request successful\n            }\n        })\n        .catch((error) => {\n            console.error(`Error ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// 1 = INFO, 2 = Action, 3 = CRITICAL ALERT\nvar presence = msg.payload.object.mydata.Presence;\nvar batteryLevel = msg.payload.object.mydata.Battery;\nif (batteryLevel > 50) {\n    const values = [1, batteryLevel, \"\", 1];\n    send_to_database(values);\n} else if (batteryLevel <= 50 && batteryLevel > 25) {\n    const values = [1, batteryLevel, \"BATTERIE\", 2];\n    send_to_database(values);\n} else if (batteryLevel <= 25) {\n    const values = [1, batteryLevel, \"BATTERIE\", 3];\n    send_to_database(values);\n}\nconst values = [1, presence, \"\", 1];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1740,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5d5c631555bb5417",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 5",
+        "func": "const axios = global.get('axios');\n\nfunction send_to_bdd(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Tout marche\n            }\n        })\n        .catch((error) => {\n            console.error(`Erreur ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// capteur LAVABOT\nvar presence = msg.payload.object.mydata.presence;\nif (presence === 1) {\n    const values = [2, 1, \"Mouvement\", 1];\n    send_to_bdd(values);\n} else if (presence === 0) {\n    const values = [2, 0, \"\", 1];\n    send_to_bdd(values);\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "36a2b2d913a7f6cb",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 6",
+        "func": "const axios = global.get('axios');\n\nfunction send_to_bdd(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Tout marche\n            }\n        })\n        .catch((error) => {\n            console.error(`Erreur ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// CAPTEUR DOUCHE\nvar presence = msg.payload.object.mydata.presence;\nif (presence === 1) {\n    const values = [1, 1, \"Mouvement\", 1];\n    send_to_bdd(values);\n} else if (presence === 0) {\n    const values = [1, 0, \"\", 1];\n    send_to_bdd(values);\n}",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b84d9bde93b0053b",
+        "type": "debug",
+        "z": "e10d9c4aa7902102",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.object.mydata",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "3b4f878f031c2322",
+        "type": "mqtt in",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "topic": "application/11/device/0c7e450102030344/event/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2fcd7b1431a62f13",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 540,
+        "wires": [
+            [
+                "50475008377ca5a5"
+            ]
+        ]
+    },
+    {
+        "id": "1cda06f0f7c34d5a",
+        "type": "debug",
+        "z": "e10d9c4aa7902102",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload.object.mydata",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "50475008377ca5a5",
+        "type": "json",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "property": "payload.object.mydata",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 540,
+        "wires": [
+            [
+                "53eafd0c8d743f08",
+                "a29f71ac737896bf"
+            ]
+        ]
+    },
+    {
+        "id": "d8125fdc8f607ac8",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 7",
+        "func": "const axios = global.get('axios');\n\nfunction send_to_database(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Request successful\n            }\n        })\n        .catch((error) => {\n            console.error(`Error ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// 1 = INFO, 2 = Action, 3 = CRITICAL ALERT\nvar presence = msg.payload.object.mydata.Presence;\nvar batteryLevel = msg.payload.object.mydata.Battery;\nif (batteryLevel > 50) {\n    const values = [2, batteryLevel,\"\", 1];\n    send_to_database(values);\n} else if (batteryLevel <= 50 && batteryLevel > 25) {\n    const values = [2, batteryLevel, \"BATTERIE\", 2];\n    send_to_database(values);\n} else if (batteryLevel <= 25) {\n    const values = [2, batteryLevel, \"BATTERIE\", 3];\n    send_to_database(values);\n}\nconst values= [2, presence,\"\",1];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1740,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa5146443ae6c29a",
+        "type": "mqtt in",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "topic": "application/11/device/0c7e450102030345/event/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2fcd7b1431a62f13",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 620,
+        "wires": [
+            [
+                "663691c38867bcd3"
+            ]
+        ]
+    },
+    {
+        "id": "663691c38867bcd3",
+        "type": "json",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "property": "payload.object.mydata",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 620,
+        "wires": [
+            [
+                "d8125fdc8f607ac8",
+                "63d096ed56896c8c"
+            ]
+        ]
+    },
+    {
+        "id": "3e6add30e4892e87",
+        "type": "mqtt in",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "topic": "application/11/device/0c7e450102030346/event/up",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "2fcd7b1431a62f13",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 700,
+        "wires": [
+            [
+                "a5894fc5454a1f01"
+            ]
+        ]
+    },
+    {
+        "id": "a5894fc5454a1f01",
+        "type": "json",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "property": "payload.object.mydata",
+        "action": "",
+        "pretty": false,
+        "x": 650,
+        "y": 700,
+        "wires": [
+            [
+                "45edb729dd0d863e",
+                "f7c9ca27409a27b9"
+            ]
+        ]
+    },
+    {
+        "id": "b6156428a0e7bdeb",
+        "type": "join",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload.object.mydata",
+        "propertyType": "msg",
+        "key": "payload.object.mydata.presence",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "3",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 1050,
+        "y": 820,
+        "wires": [
+            [
+                "be5d5c4d66480b78"
+            ]
+        ]
+    },
+    {
+        "id": "3628a7ddbcea0101",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 9",
+        "func": "var sensor1 = msg.payload.sensor1.Presence;\nvar sensor2 = msg.payload.sensor2.Presence;\nvar sensor3 = msg.payload.sensor3.Presence;\n\nvar location = {\n    zone: 0,   // Default value if no condition is met\n    movement: false  // Default value if no condition is met\n};\n\nif (sensor1 == 1 && sensor2 == 1 && sensor3 == 1) {\n    location.zone = 7;\n    location.movement = true;\n} else if (sensor1 == 1 && sensor2 == 0 && sensor3 == 0) {\n    location.zone = 1;\n    location.movement = true;\n} else if (sensor1 == 0 && sensor2 == 1 && sensor3 == 0) {\n    location.zone = 2;\n    location.movement = true;\n} else if (sensor1 == 0 && sensor2 == 0 && sensor3 == 1) {\n    location.zone = 3;\n    location.movement = true;\n} else if (sensor1 == 1 && sensor2 == 1 && sensor3 == 0) {\n    location.zone = 4;\n    location.movement = true;\n} else if (sensor1 == 1 && sensor2 == 0 && sensor3 == 1) {\n    location.zone = 5;\n    location.movement = true;\n} else if (sensor1 == 0 && sensor2 == 1 && sensor3 == 1) {\n    location.zone = 6;\n    location.movement = true;\n}\n\n// Send the result to the next node\nmsg.payload = location;\nnode.send(msg);\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 820,
+        "wires": [
+            [
+                "11cf301cfb1c2b33",
+                "5dd1bb5a1436c289"
+            ]
+        ]
+    },
+    {
+        "id": "11cf301cfb1c2b33",
+        "type": "debug",
+        "z": "e10d9c4aa7902102",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1560,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "a29f71ac737896bf",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 10",
+        "func": "// Copy the current content of msg.payload.object.mydata into a new variable\nvar mydata = msg.payload.object.mydata;\n\n// Add the sensorID indicator with the desired value\nmydata.sensorID = 1;  // You can change the value of sensorID as needed\n\n// Update the mydata field with the new object\nmsg.payload.object.mydata = mydata;\n\n// Return the modified message\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 460,
+        "wires": [
+            [
+                "c9f302339d0c7451",
+                "b6156428a0e7bdeb"
+            ]
+        ]
+    },
+    {
+        "id": "63d096ed56896c8c",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 11",
+        "func": "// Copy the current content of msg.payload.object.mydata into a new variable\nvar mydata = msg.payload.object.mydata;\n\n// Add the sensorID indicator with the desired value\nmydata.sensorID = 2;  // You can change the value of sensorID as needed\n\n// Update the mydata field with the new object\nmsg.payload.object.mydata = mydata;\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 580,
+        "wires": [
+            [
+                "b84d9bde93b0053b",
+                "b6156428a0e7bdeb"
+            ]
+        ]
+    },
+    {
+        "id": "45edb729dd0d863e",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 12",
+        "func": "// Copy the current content of msg.payload.object.mydata into a new variable\nvar mydata = msg.payload.object.mydata;\n\n// Add the sensorID indicator with the desired value\nmydata.sensorID = 3;  // You can change the value of sensorID as needed\n\n// Update the mydata field with the new object\nmsg.payload.object.mydata = mydata;\n\n// Return the modified message\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 660,
+        "wires": [
+            [
+                "1cda06f0f7c34d5a",
+                "b6156428a0e7bdeb"
+            ]
+        ]
+    },
+    {
+        "id": "be5d5c4d66480b78",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 13",
+        "func": "// Retrieve the array of objects from msg.payload.object.mydata\nvar mydataArray = msg.payload.object.mydata;\n\n// Initialize variables to store filtered objects\nvar sensor1 = null;\nvar sensor2 = null;\nvar sensor3 = null;\n\n// Indicates if an error occurred\nvar errorOccurred = false;\n\n// Iterate through each object in the array\nfor (var i = 0; i < mydataArray.length; i++) {\n    var currentObject = mydataArray[i];\n\n    // Check the value of sensorID\n    if (currentObject.sensorID === 1) {\n        sensor1 = currentObject;\n    } else if (currentObject.sensorID === 2) {\n        sensor2 = currentObject;\n    } else if (currentObject.sensorID === 3) {\n        sensor3 = currentObject;\n    } else {\n        // If an unexpected sensorID value is encountered, set errorOccurred to true\n        errorOccurred = true;\n    }\n}\n\n// Check if an error occurred\nif (errorOccurred) {\n    // If an error occurred, do not modify the message\n    return null;\n} else {\n    // Create an object containing the filtered results\n    var filteredResults = {\n        sensor1: sensor1,\n        sensor2: sensor2,\n        sensor3: sensor3\n    };\n\n    // Add the filtered results to the message\n    msg.payload = filteredResults;\n\n    // Return the modified message\n    return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1210,
+        "y": 820,
+        "wires": [
+            [
+                "3628a7ddbcea0101"
+            ]
+        ]
+    },
+    {
+        "id": "5dd1bb5a1436c289",
+        "type": "mqtt out",
+        "z": "e10d9c4aa7902102",
+        "name": "",
+        "topic": "SAE51/localisation",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d9a75ba4b3112b9a",
+        "x": 1590,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "f7c9ca27409a27b9",
+        "type": "function",
+        "z": "e10d9c4aa7902102",
+        "name": "function 8",
+        "func": "const axios = global.get('axios');\n\nfunction send_to_database(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Request successful\n            }\n        })\n        .catch((error) => {\n            console.error(`Error ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// 1 = INFO, 2 = Action, 3 = CRITICAL ALERT\nvar presence = msg.payload.object.mydata.Presence;\nvar batteryLevel = msg.payload.object.mydata.Battery;\nif (batteryLevel > 50) {\n    const values = [3, batteryLevel, \"\", 1];\n    send_to_database(values);\n} else if (batteryLevel <= 50 && batteryLevel > 25) {\n    const values = [3, batteryLevel, \"BATTERIE\", 2];\n    send_to_database(values);\n} else if (batteryLevel <= 25) {\n    const values = [3, batteryLevel, \"BATTERIE\", 3];\n    send_to_database(values);\n}\nconst values = [3, presence, \"\", 1];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1740,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2fcd7b1431a62f13",
+        "type": "mqtt-broker",
+        "name": "MQTT Publique",
+        "broker": "chirpstack.iut-blagnac.fr",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d9a75ba4b3112b9a",
+        "type": "mqtt-broker",
+        "name": "Privé",
+        "broker": "192.168.45.155",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
