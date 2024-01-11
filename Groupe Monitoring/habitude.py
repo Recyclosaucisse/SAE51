@@ -140,8 +140,6 @@ try:
 
                 # If the timer reaches 0, alert the user about their inactivity
                 if timer <= 0:
-                    values = [4, "", "", 2]
-                    send_to_bdd(values)
                     mqtt_publish("habitude prolongee")
                     print("Habitude prolongee")
 
