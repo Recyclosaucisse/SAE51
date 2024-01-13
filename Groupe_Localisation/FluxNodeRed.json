@@ -8,31 +8,6 @@
         "env": []
     },
     {
-        "id": "2f5d4bce02ade5a6",
-        "type": "inject",
-        "z": "e10d9c4aa7902102",
-        "name": "Capteur 1",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030344\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 1     }   } }",
-        "payloadType": "json",
-        "x": 160,
-        "y": 120,
-        "wires": [
-            [
-                "b29e860a5b4028e7"
-            ]
-        ]
-    },
-    {
         "id": "c9f302339d0c7451",
         "type": "debug",
         "z": "e10d9c4aa7902102",
@@ -50,142 +25,6 @@
         "wires": []
     },
     {
-        "id": "d73f9eb625ad1cf4",
-        "type": "inject",
-        "z": "e10d9c4aa7902102",
-        "name": "capteur 2",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030345\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 1     }   } }",
-        "payloadType": "json",
-        "x": 160,
-        "y": 240,
-        "wires": [
-            [
-                "b29e860a5b4028e7"
-            ]
-        ]
-    },
-    {
-        "id": "7ccadc88d091c4ef",
-        "type": "inject",
-        "z": "e10d9c4aa7902102",
-        "name": "capteur 3",
-        "props": [
-            {
-                "p": "payload"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "{   \"applicationID\": \"11\",   \"applicationName\": \"TP-RT\",   \"deviceName\": \"M5Stack06-68\",   \"deviceProfileName\": \"M5Stack\",   \"deviceProfileID\": \"0f843a5e-0f2f-46b1-8d12-69e97a603b2a\",   \"devEUI\": \"0c7e450102030346\",   \"rxInfo\": [     {       \"txInfo\": {         \"frequency\": 868500000,         \"dr\": 5,         \"adr\": true,         \"fCnt\": 26,         \"fPort\": 1,         \"data\": \"eyJQcmVzZW5jZSI6Qn0=\"       }     }   ],   \"object\": {     \"mydata\": {       \"presence\": 0     }   } }",
-        "payloadType": "json",
-        "x": 160,
-        "y": 400,
-        "wires": [
-            [
-                "b29e860a5b4028e7"
-            ]
-        ]
-    },
-    {
-        "id": "b29e860a5b4028e7",
-        "type": "join",
-        "z": "e10d9c4aa7902102",
-        "name": "",
-        "mode": "custom",
-        "build": "array",
-        "property": "payload.object.mydata.presence",
-        "propertyType": "msg",
-        "key": "payload.object.mydata.presence",
-        "joiner": "\\n",
-        "joinerType": "str",
-        "accumulate": false,
-        "timeout": "",
-        "count": "3",
-        "reduceRight": false,
-        "reduceExp": "",
-        "reduceInit": "",
-        "reduceInitType": "",
-        "reduceFixup": "",
-        "x": 440,
-        "y": 180,
-        "wires": [
-            [
-                "cd0f3a1942b7fbf1"
-            ]
-        ]
-    },
-    {
-        "id": "cd0f3a1942b7fbf1",
-        "type": "function",
-        "z": "e10d9c4aa7902102",
-        "name": "function 2",
-        "func": "var capteur1 = msg.payload.object.mydata.presence[0];\nvar capteur2 = msg.payload.object.mydata.presence[1];\nvar capteur3 = msg.payload.object.mydata.presence[2];\n\nvar resultat = {\n    capteur1: capteur1,\n    capteur2: capteur2,\n    capteur3: capteur3,\n};\n\n// Remplacer msg.payload par le nouvel objet\nmsg.payload = resultat;\n\n// Afficher le nouvel objet dans le débogueur\nnode.send(msg);",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 640,
-        "y": 180,
-        "wires": [
-            [
-                "d017ee36ab3cf86d"
-            ]
-        ]
-    },
-    {
-        "id": "d017ee36ab3cf86d",
-        "type": "function",
-        "z": "e10d9c4aa7902102",
-        "name": "function 3",
-        "func": "var capteur1 = msg.payload.capteur1;\nvar capteur2 = msg.payload.capteur2;\nvar capteur3 = msg.payload.capteur3;\n\nvar localisation = {\n    zone: 0,   // Valeur par défaut si aucune condition n'est remplie\n    mouvement: false  // Valeur par défaut si aucune condition n'est remplie\n};\n\nif (capteur1 == 1 && capteur2 == 1 && capteur3 == 1) {\n    localisation.zone = 7;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 0 && capteur3 == 0) {\n    localisation.zone = 1;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 1 && capteur3 == 0) {\n    localisation.zone = 2;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 0 && capteur3 == 1) {\n    localisation.zone = 3;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 1 && capteur3 == 0) {\n    localisation.zone = 4;\n    localisation.mouvement = true;\n} else if (capteur1 == 1 && capteur2 == 0 && capteur3 == 1) {\n    localisation.zone = 5;\n    localisation.mouvement = true;\n} else if (capteur1 == 0 && capteur2 == 1 && capteur3 == 1) {\n    localisation.zone = 6;\n    localisation.mouvement = true;\n}\n\n// Envoyer le résultat au prochain nœud\nmsg.payload = localisation;\nnode.send(msg);",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 820,
-        "y": 180,
-        "wires": [
-            [
-                "eceab4e25b924cfd"
-            ]
-        ]
-    },
-    {
-        "id": "eceab4e25b924cfd",
-        "type": "mqtt out",
-        "z": "e10d9c4aa7902102",
-        "name": "",
-        "topic": "SAE51/localisation",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "2fcd7b1431a62f13",
-        "x": 1050,
-        "y": 180,
-        "wires": []
-    },
-    {
         "id": "53eafd0c8d743f08",
         "type": "function",
         "z": "e10d9c4aa7902102",
@@ -199,42 +38,6 @@
         "libs": [],
         "x": 1740,
         "y": 520,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "5d5c631555bb5417",
-        "type": "function",
-        "z": "e10d9c4aa7902102",
-        "name": "function 5",
-        "func": "const axios = global.get('axios');\n\nfunction send_to_bdd(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Tout marche\n            }\n        })\n        .catch((error) => {\n            console.error(`Erreur ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// capteur LAVABOT\nvar presence = msg.payload.object.mydata.presence;\nif (presence === 1) {\n    const values = [2, 1, \"Mouvement\", 1];\n    send_to_bdd(values);\n} else if (presence === 0) {\n    const values = [2, 0, \"\", 1];\n    send_to_bdd(values);\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 360,
-        "y": 240,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "36a2b2d913a7f6cb",
-        "type": "function",
-        "z": "e10d9c4aa7902102",
-        "name": "function 6",
-        "func": "const axios = global.get('axios');\n\nfunction send_to_bdd(values) {\n    const url = \"http://sae51.rt-blagnac.fr/api/api.php\";\n    const data = {\n        token: \"zfLMqQseDneEogUe52avGbBdJ8RATdCi9B4eag8cjPy8Qu82qkdffFYXwCcz3n3kV6K9wAeQY2nA6a6UGK38syHwLLfu632FoJ6X\",\n        values: values.join(',')\n    };\n\n    const headers = {\n        'Content-Type': 'application/x-www-form-urlencoded'\n    };\n\n    axios.post(url, data, { headers })\n        .then((response) => {\n            if (response.status === 201) {\n                // Tout marche\n            }\n        })\n        .catch((error) => {\n            console.error(`Erreur ${error.response.status}: ${error.response.data}`);\n        });\n}\n\n// CAPTEUR DOUCHE\nvar presence = msg.payload.object.mydata.presence;\nif (presence === 1) {\n    const values = [1, 1, \"Mouvement\", 1];\n    send_to_bdd(values);\n} else if (presence === 0) {\n    const values = [1, 0, \"\", 1];\n    send_to_bdd(values);\n}",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 340,
-        "y": 380,
         "wires": [
             []
         ]
@@ -491,7 +294,7 @@
         "type": "function",
         "z": "e10d9c4aa7902102",
         "name": "function 13",
-        "func": "var mydataArray = msg.payload.object.mydata;\nvar sensor1 = null;\nvar sensor2 = null;\nvar sensor3 = null;\n\nfor (var i = 0; i < mydataArray.length; i++) {\n    var currentObject = mydataArray[i];\n\n    if (!currentObject) {\n        // Si currentObject est null, le remplacer par un objet avec Presence: 0\n        currentObject = { Presence: 0 };\n    } else {\n        // Si une valeur sensorID inattendue est rencontrée, remplacer sensorID par 0\n        if (currentObject.sensorID === undefined || currentObject.sensorID === null) {\n            currentObject.sensorID = 0;\n        }\n    }\n\n    // Attribution aux capteurs respectifs\n    if (currentObject.sensorID === 1) {\n        sensor1 = currentObject;\n    } else if (currentObject.sensorID === 2) {\n        sensor2 = currentObject;\n    } else if (currentObject.sensorID === 3) {\n        sensor3 = currentObject;\n    }\n}\n\nvar filteredResults = {\n    sensor1: sensor1,\n    sensor2: sensor2,\n    sensor3: sensor3\n};\n\nmsg.payload = filteredResults;\nreturn msg;",
+        "func": "var mydataArray = msg.payload.object.mydata;\nvar sensor1 = null;\nvar sensor2 = null;\nvar sensor3 = null;\n\nfor (var i = 0; i < mydataArray.length; i++) {\n    var currentObject = mydataArray[i];\n\n    if (!currentObject) {\n        // If currentObject is null, replace it with an object with Presence: 0\n        currentObject = { Presence: 0 };\n    } else {\n        // If an unexpected sensorID value is encountered, replace sensorID with 0\n        if (currentObject.sensorID === undefined || currentObject.sensorID === null) {\n            currentObject.sensorID = 0;\n        }\n    }\n\n    // Assign to respective sensors\n    if (currentObject.sensorID === 1) {\n        sensor1 = currentObject;\n    } else if (currentObject.sensorID === 2) {\n        sensor2 = currentObject;\n    } else if (currentObject.sensorID === 3) {\n        sensor3 = currentObject;\n    }\n}\n\nvar filteredResults = {\n    sensor1: sensor1,\n    sensor2: sensor2,\n    sensor3: sensor3\n};\n\nmsg.payload = filteredResults;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
