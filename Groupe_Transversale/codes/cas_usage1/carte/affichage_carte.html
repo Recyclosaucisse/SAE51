@@ -1,0 +1,81 @@
+<!-- This line includes the Axios library -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<div id="map-container">
+    <?xml version="1.0" encoding="UTF-8"?>
+    <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 289 289">
+        <defs>
+            <style>
+                /* Add style to control the size of the container */
+                #map-container {
+                    width: 50%; /* You can adjust the width as needed */
+                    margin: auto; /* Center the container horizontally */
+                    background-image: url('/images/plan_mi.png'); /* Replace 'path/to/your/image.jpg' with the path to your image */
+                        background-size: auto 100%; /* Adjust the width of the image to fill the container without distortion */
+                        background-repeat: no-repeat; /* Prevent the background image from repeating */
+                        background-position: center; /* Center the background image */
+                        position: relative; /* Set relative position for absolute positioning of child elements */
+                    }
+                /* Add style to adjust the size of the SVG */
+                #Layer_2 {
+                    width: 100%; /* Use maximum width of the container */
+                    height: auto; /* Automatically adjust the height proportionally */
+                }
+                /* Add style to control the color of SVG elements */
+                .cls-1 {
+                    fill:rgba(0, 0, 0, 0);
+                    stroke: black; /* Change the border color to black */
+                    stroke-width: 0.5; /* Set the border thickness */
+                /* Change the fill color to white */
+                }
+            </style>
+        </defs>
+        <g id="Layer_1-2" data-name="Layer 1">
+            <!-- Zone 1 -->
+            <path class="cls-1 zone1" d="M288.5,.5V288.5h-91.05c.7-6.24,1.05-12.58,1.05-19,0-48.99-20.6-93.16-53.61-124.34,33.01-31.17,53.61-75.34,53.61-124.33,0-6.88-.41-13.66-1.2-20.33h91.2Z"/>
+            <!-- Zone 2 -->
+            <path class="cls-1 zone2" d="M160.24,.5c-37.69,24.2-65.26,62.79-74.95,108.02-18.05-6.49-37.51-10.02-57.79-10.02-9.19,0-18.21,.72-27,2.12V.5H160.24Z"/>
+            <!-- Zone 3 -->
+            <path class="cls-1 zone3" d="M160.24,288.5H.5v-98.79c8.79,1.4,17.81,2.12,27,2.12,20.38,0,39.93-3.57,58.06-10.11,9.92,44.7,37.33,82.8,74.68,106.78Z"/>
+            <!-- Zone 4 -->
+            <path class="cls-1 zone4" d="M198.5,20.83c0,48.99-20.6,93.16-53.61,124.33-16.96-16.02-37.2-28.61-59.6-36.64C94.98,63.29,122.55,24.7,160.24,.5h37.06c.79,6.67,1.2,13.45,1.2,20.33Z"/>
+            <!-- Zone 5 -->
+            <path class="cls-1 zone5" d="M198.5,269.5c0,6.42-.35,12.76-1.05,19h-37.21c-37.35-23.98-64.76-62.08-74.68-106.78,22.29-8.05,42.44-20.6,59.33-36.56,33.01,31.18,53.61,75.35,53.61,124.34Z"/>
+            <!-- Zone 6 -->
+            <path class="cls-1 zone6" d="M85.56,181.72c-18.13,6.54-37.68,10.11-58.06,10.11-9.19,0-18.21-.72-27-2.12V100.62c8.79-1.4,17.81-2.12,27-2.12,20.28,0,39.74,3.53,57.79,10.02-2.48,11.6-3.79,23.64-3.79,35.98s1.4,25.24,4.06,37.22Z"/>
+            <!-- Zone 7 -->
+            <path class="cls-1 zone7" d="M144.89,145.16c-16.89,15.96-37.04,28.51-59.33,36.56-2.66-11.98-4.06-24.44-4.06-37.22s1.31-24.38,3.79-35.98c22.4,8.03,42.64,20.62,59.6,36.64Z"/>
+        </g>
+    </svg>
+</div>
+<script>
+    function fetchZone() {
+        axios.get('/api/recup_zone.php')
+        .then(function (response) {
+            const zoneId = response.data; // Assumes the response is just a number
+            const zones = document.querySelectorAll('.cls-1');
+            // Reset all zones to their original color first
+            zones.forEach(function(zone) {
+            zone.style.fill = 'rgba(0, 0, 0, 0)'; // or the default color you have
+            });
+            // Then highlight the specific zone
+            const zoneToHighlight = document.querySelector('.zone' + zoneId);
+            if (zoneToHighlight) {
+                zoneToHighlight.style.fill = 'rgba(255,0,0,0.5)'; // Change the color of the specified zone
+            }
+        })
+        .catch(function (error) {
+            console.error('An error occurred:', error);
+        });
+    }
+
+    function updateZones() {
+        // Call fetchZone immediately for the first update
+        fetchZone();
+        // Then update the zones every minute
+        setInterval(fetchZone, 60000); // 60000 ms = 1 minute
+    }
+
+    // Start updating the zones
+    updateZones();
+</script>

@@ -1,0 +1,85 @@
+<style>
+/* Define styles for the accordion elements */
+.accordion {
+	/* Set the background gradient and color of the accordion element */
+	background: linear-gradient(135deg, #112855 0, #424077 100%);
+	color: white;
+	padding: 16px; /* Add padding to the accordion element */
+	cursor: pointer; /* Change the cursor to a pointer when hovering over the accordion element */
+	border: none; /* Remove the border from the accordion element */
+	text-align: left; /* Align the text of the accordion element to the left */
+	outline: none; /* Remove the outline from the accordion element */
+	width: 100%; /* Set the width of the accordion element to 100% */
+	position: relative; /* Set the position of the accordion element to relative */
+}
+
+/* Define styles for the accordion element's "after" pseudo-element */
+.accordion::after {
+	content: '\25BC'; /* Set the content of the pseudo-element to a right-pointing arrow */
+	font-size: 12px; /* Set the font size of the pseudo-element */
+	position: absolute; /* Set the position of the pseudo-element to absolute */
+	right: 16px; /* Position the pseudo-element 16 pixels from the right edge of the accordion element */
+	color: white; /* Set the color of the pseudo-element to white */
+}
+
+/* Define styles for the ".now" class and the accordion element on hover */
+.now,
+.accordion:hover {
+	/* Set the background gradient and color of the accordion element on hover and for the ".now" class */
+	background: linear-gradient(135deg, #2f3b5f 0, #536293 100%);
+}
+
+/* Define styles for the ".now" class's "after" pseudo-element */
+.now::after {
+	content: '\25B2'; /* Set the content of the pseudo-element to a downward-pointing arrow */
+}
+
+/* Define styles for the accordion panel */
+.panel {
+	padding: 0 16px; /* Add padding to the panel element */
+	background-color: white; /* Set the background color of the panel element to white */
+	overflow: hidden; /* Hide any content that overflows the panel element */
+	transition: max-height 0.5s ease; /* Add a transition effect to the panel element's height property */
+	max-height: 0; /* Set the initial height of the panel element to 0 */
+}
+</style>
+
+
+<script>
+// Get all the elements with class "accordion"
+	var acc = document.getElementsByClassName("accordion");
+	var i;
+
+// Loop through all the accordion elements
+	for (i = 0; i < acc.length; i++) {
+		acc[i].addEventListener("click", function() {
+// Get the next sibling element which is the panel
+			var panel = this.nextElementSibling;
+// Get the scroll height of the panel
+			var panelHeight = panel.scrollHeight;
+
+// Check if the panel has a max-height style property
+			if (panel.style.maxHeight) {
+// If it does, remove the max-height style property
+				panel.style.maxHeight = null;
+			} else {
+// If it doesn't, loop through all the accordion elements
+				for (var j = 0; j < acc.length; j++) {
+// Get the next sibling element of the current accordion element
+					var otherPanel = acc[j].nextElementSibling;
+// If the other panel has a max-height style property, remove it
+					if (otherPanel.style.maxHeight) {
+						otherPanel.style.maxHeight = null;
+// Remove the "now" class from the current accordion element
+						acc[j].classList.remove("now");
+					}
+				}
+// Set the max-height style property of the current panel to its scroll height
+				panel.style.maxHeight = panelHeight + "px";
+			}
+
+// Toggle the "now" class on the current accordion element
+			this.classList.toggle("now");
+		});
+	}
+</script>
